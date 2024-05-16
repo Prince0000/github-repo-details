@@ -1,0 +1,14 @@
+/* Skeleton Loader CSS */
+.skeleton-loader {
+    background-color: #7a7a7a;
+    animation: skeleton-animation 1s infinite alternate;
+}
+
+@keyframes skeleton-animation {
+    0% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0.2;
+    }
+}

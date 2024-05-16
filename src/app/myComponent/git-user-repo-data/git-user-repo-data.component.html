@@ -1,0 +1,109 @@
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4" *ngIf="!isLoading">
+    <ng-container *ngIf="pagedRepos.length > 0; else noReposFound">
+        <div class="mb-4 bg-white rounded-lg" *ngFor="let repo of pagedRepos">
+            <div class="border border-b-0 p-4 rounded">
+                <div class="flex justify-between items-center">
+                    <h1 class="mb-3 text-xl font-bold capitalize">{{ repo.name }}</h1>
+                    <div class="flex items-center mt-3" title="View Repository">
+                        <a href="{{ repo.html_url }}" target="_blank">
+                            <i class="material-icons text-secondary mr-2">link</i>
+                        </a>
+                    </div>
+                </div>
+                <p class="text-wrap">{{ repo.description || 'No description' }}</p>
+                <p class="font-light text-end">Language : <i>{{repo.language ? repo.language : "No language Found"}}</i>
+                </p>
+
+                <div class="flex flex-wrap gap-3 mt-3">
+                    <ng-container *ngIf="repo.topics.length > 0; else noTopics">
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 rounded"
+                            *ngFor="let topic of repo.topics">{{ topic }}</button>
+                    </ng-container>
+                    <ng-template #noTopics>
+                        <button class="bg-red-500 text-white py-1 px-2 rounded" disabled>No Topics Found</button>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <!-- No Repositories Found -->
+    <ng-template #noReposFound>
+        <div class="mb-4">
+            <div class="border p-4 rounded">
+                <p>No Repositories Found</p>
+            </div>
+        </div>
+    </ng-template>
+</div>
+<!-- Display Repositories End -->
+
+
+<!-- Loading Skeleton -->
+<div class="row mt-4" *ngIf="isLoading">
+    <div class="col-md-12 mb-4">
+        <div class="border p-4 rounded">
+            <div class="skeleton-loader mb-3 w-80 h-6"></div>
+            <div class="skeleton-loader mb-3 w-full h-80"></div>
+            <div class="flex flex-wrap gap-3 mt-3">
+                <div class="skeleton-loader w-16 h-8"></div>
+                <div class="skeleton-loader w-20 h-8"></div>
+                <div class="skeleton-loader w-16 h-8"></div>
+                <div class="skeleton-loader w-28 h-8"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Skeleton End -->
+
+
+<!-- Pagination -->
+<nav class="flex justify-center items-center mt-4 flex-col" aria-label="Pagination" *ngIf="totalPages >= 1">
+    <ul class="pagination flex justify-center items-center">
+        <!-- Previous Page Button -->
+        <li>
+            <button
+            class="bg-white flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all select-none disabled:opacity-50 disabled:border disabled:shadow-none disabled:pointer-events-none hover:bg-gray-900/10 "
+            type="button" [disabled]="currentPage === 1" (click)="previousPage()" >
+                <span>&laquo;</span>
+            </button>
+        </li>
+
+        <!-- Page Numbers -->
+        <ng-container *ngFor="let page of pageNumbers">
+            <li class="pagination-item cursor-pointer border p-1 bg-white">
+                <a class="pagination-link" (click)="setPage(page)" [class.bg-blue-500]="currentPage === page"
+                    [class.text-white]="currentPage === page"
+                    class="block w-8 h-8 leading-8 text-center border border-gray-300 rounded hover:bg-gray-200 hover:text-gray-700 focus:outline-none focus:bg-gray-200">
+                    {{ page }}
+                </a>
+            </li>
+        </ng-container>
+
+        <!-- Next Page Button -->
+        <li>
+            <button
+                class="bg-white flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all select-none disabled:opacity-50 disabled:border disabled:shadow-none disabled:pointer-events-none hover:bg-gray-900/10 "
+                type="button" [disabled]="currentPage === totalPages" (click)="nextPage()">
+                <span>&raquo;</span>
+            </button>
+        </li>
+    </ul>
+
+    <div class="flex justify-around items-center w-1/2 mt-4 ">
+        <button [disabled]="currentPage === 1"
+            class="flex justify-center items-center select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 border border-gray-900 text-gray-900 hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] rounded-full"
+            type="button" (click)="previousPage()">
+            <i class="material-icons text-secondary mr-2">west</i> <span>Older</span>
+        </button>
+
+        <button [disabled]="currentPage === totalPages"
+            class="flex justify-center items-center select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 border border-gray-900 text-gray-900 hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] rounded-full"
+            type="button" (click)="nextPage()">
+            <span>Newer</span> <i class="material-icons text-secondary mr-2">east</i>
+        </button>
+    </div>
+</nav>
+
+<!-- Pagination End -->
