@@ -1,5 +1,4 @@
 
-```markdown
 # GitHub Repository Fetcher
 
 This is a simple Angular application that fetches and displays GitHub repositories for a given username.
